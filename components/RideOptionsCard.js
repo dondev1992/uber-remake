@@ -1,6 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +13,17 @@ import { Icon } from "react-native-elements";
 import { useSelector } from "react-redux";
 import tw from "tailwind-react-native-classnames";
 import { selectTravelTimeInformation } from "../slices/navSlice";
+import "intl";
+import { Platform } from "react-native";
+import "intl/locale-data/jsonp/en";
+
+// To resolve "can't find Intl issue"
+if (Platform.OS === "android") {
+  // See https://github.com/expo/expo/issues/6536 for this issue.
+  if (typeof Intl.__disableRegExpRestore === "function") {
+    Intl.__disableRegExpRestore();
+  }
+}
 
 const data = [
   {
@@ -36,6 +46,9 @@ const data = [
   },
 ];
 
+// Surge charge rate
+const SURGE_CHARGE_RATE = 1.5;
+
 const RideOptionsCard = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState(null);
@@ -50,7 +63,7 @@ const RideOptionsCard = () => {
           <Icon name="chevron-left" type="fontawesome" />
         </TouchableOpacity>
         <Text style={tw`text-center py-5 text-xl`}>
-          Select a Ride - {travelTimeInformation?.distance.text}
+          Select a Ride - {travelTimeInformation?.distance?.text}
         </Text>
       </View>
       <FlatList
@@ -58,7 +71,7 @@ const RideOptionsCard = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item: { id, title, multiplier, image }, item }) => (
           <TouchableOpacity
-            style={tw`flex-row items-center justify-between px-10 ${
+            style={tw`flex-row -ml-3 items-center justify-between px-10 ${
               id === selected?.id && "bg-gray-200"
             }`}
             onPress={() => setSelected(item)}
@@ -71,16 +84,28 @@ const RideOptionsCard = () => {
               }}
               source={{ uri: image }}
             />
-            <View style={tw`-ml-6`}>
+            <View style={tw`-ml-3`}>
               <Text style={tw`text-xl font-semibold`}>{title}</Text>
-              <Text>{travelTimeInformation?.duration.text} Travel Time</Text>
+              <Text style={tw`mr-3`}>
+                {travelTimeInformation?.duration?.text} duration
+              </Text>
             </View>
-            <Text style={tw`text-xl`}>$90</Text>
+            <Text style={tw`text-xl`}>
+              {new Intl.NumberFormat("en-us", {
+                style: "currency",
+                currency: "USD",
+              }).format(
+                (travelTimeInformation?.duration?.value *
+                  SURGE_CHARGE_RATE *
+                  multiplier) /
+                  100
+              )}
+            </Text>
           </TouchableOpacity>
         )}
       />
 
-      <View style={tw`mb-8`}>
+      <View style={tw`mb-8 mt-auto border-t border-gray-200`}>
         <TouchableOpacity
           disabled={!selected}
           style={tw`bg-black py-3 m-3 ${!selected && "bg-gray-300"}`}

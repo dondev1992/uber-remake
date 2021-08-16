@@ -1,6 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
 import tw from "tailwind-react-native-classnames";
@@ -16,7 +15,7 @@ const data = [
     id: "456",
     icon: "briefcase",
     location: "Work",
-    destination: "Pimp Avenue Matthews, NC USA",
+    destination: "Sam Newell Matthews, NC USA",
   },
 ];
 
