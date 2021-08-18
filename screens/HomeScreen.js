@@ -7,6 +7,7 @@ import { GOOGLE_MAPS_API_KEY } from "@env";
 import { setDestination, setOrigin } from "../slices/navSlice";
 import { useDispatch } from "react-redux";
 import NavFavorites from "../components/NavFavorites";
+import logo from "../assets/myuberlogo.png";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -19,10 +20,10 @@ const HomeScreen = () => {
             width: 100,
             height: 100,
             resizeMode: "contain",
+            marginTop: 15,
+            marginLeft: 7,
           }}
-          source={{
-            uri: "https://links.papareact.com/gzs",
-          }}
+          source={require("../assets/myuberlogo.png")}
         />
 
         <GooglePlacesAutocomplete
