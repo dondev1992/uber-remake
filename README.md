@@ -18,6 +18,9 @@ The app is deployed [Here](https://exp.host/@dondev1992/uber-clone)
 * react-redux
 * tailwind css
 * expo
+* google places API
+* google directions API
+* google distance matrix API
 
 
 ### Installing
